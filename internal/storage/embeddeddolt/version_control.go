@@ -48,6 +48,13 @@ func (s *EmbeddedDoltStore) Commit(ctx context.Context, message string) error {
 	})
 }
 
+// CommitWithConfig commits all working set changes including config.
+// EmbeddedDoltStore.Commit already includes config via DOLT_ADD('-A'),
+// so this is just an alias to satisfy the VersionControl interface (GH#3216).
+func (s *EmbeddedDoltStore) CommitWithConfig(ctx context.Context, message string) error {
+	return s.Commit(ctx, message)
+}
+
 func (s *EmbeddedDoltStore) AddRemote(ctx context.Context, name, url string) error {
 	return s.withConn(ctx, true, func(tx *sql.Tx) error {
 		_, err := tx.ExecContext(ctx, "CALL DOLT_REMOTE('add', ?, ?)", name, url)
@@ -211,7 +218,7 @@ func (s *EmbeddedDoltStore) Push(ctx context.Context) error {
 
 func (s *EmbeddedDoltStore) Pull(ctx context.Context) error {
 	return s.withDBConn(ctx, func(db versioncontrolops.DBConn) error {
-		return versioncontrolops.Pull(ctx, db, defaultRemote)
+		return versioncontrolops.Pull(ctx, db, defaultRemote, s.branch)
 	})
 }
 
@@ -242,7 +249,7 @@ func (s *EmbeddedDoltStore) PullFrom(ctx context.Context, peer string) ([]storag
 
 	var conflicts []storage.Conflict
 	err := s.withDBConn(ctx, func(db versioncontrolops.DBConn) error {
-		if pullErr := versioncontrolops.Pull(ctx, db, peer); pullErr != nil {
+		if pullErr := versioncontrolops.Pull(ctx, db, peer, s.branch); pullErr != nil {
 			// Check if the error is due to merge conflicts.
 			c, conflictErr := versioncontrolops.GetConflicts(ctx, db)
 			if conflictErr == nil && len(c) > 0 {
