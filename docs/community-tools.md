@@ -16,7 +16,7 @@ A curated list of community-built UIs, extensions, and integrations for Beads. R
 
 - **[perles](https://github.com/zjrosen/perles)** - Terminal UI search, dependency and kanban viewer powered by a custom BQL (Beads Query Language). Built by [@zjrosen](https://github.com/zjrosen). (Go)
 
-- **[beady-eye](https://github.com/CodeForBreakfast/beady-eye)** - Read-only terminal UI drawing each tracker's beads as a tree, with the live [herdr](https://herdr.dev) agent pane beside every bead an agent has claimed. Built by [@GraemeF](https://github.com/GraemeF). (Rust)
+- **[beady-eye](https://github.com/CodeForBreakfast/beady-eye)** - Live terminal viewer that follows agents as they work through a tree of beads, redrawing as they claim and finish them. It reads a [herdr](https://herdr.dev) session alongside the tracker, so each claimed bead is drawn with the agent pane working it. Read-only. Built by [@GraemeF](https://github.com/GraemeF). (Rust)
 
 ## Web UIs
 
